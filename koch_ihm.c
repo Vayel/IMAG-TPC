@@ -6,6 +6,7 @@
 #include "koch_fonctions.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 void init_parameters(struct parameters *parameters, int argc, char *argv[])
 {
@@ -16,12 +17,13 @@ void init_parameters(struct parameters *parameters, int argc, char *argv[])
   {
     parameters->segment_length = atoi(argv[1]);
     parameters->nb_iterations = atoi(argv[2]);
-    parameters->fg_color = atoi(argv[3]);
-    parameters->bg_color = atoi(argv[4]);
+    parameters->fg_color = strtol(argv[3], NULL, 16);
+    parameters->bg_color = strtol(argv[4], NULL, 16);
     parameters->outfile = argv[5];
+    parameters->all_images = argc >= 7 && !strcmp(argv[6], "all");
   }
 
-  parameters->all_images = argc == 7;
+  parameters->image_size = 0; // TODO
 }
 
 void show_koch_list(struct list *koch)

@@ -3,7 +3,14 @@
 #include "koch_fonctions.h"
 #include "koch_ihm.h"
 
-int main() {
+int main(int argc, char **argv) {
+  // Init params
+
+  struct parameters p;
+  init_parameters(&p, argc, argv);
+  show_parameters(&p);
+  printf("\n\n");
+
   // Show list
 
   struct list p3 = {3, 3, NULL};
