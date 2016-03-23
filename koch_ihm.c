@@ -8,11 +8,32 @@
 #include <stdio.h>
 #include <string.h>
 
+#define MAX_OUTFILE_LEN 50
+#define MIN_ARGS_NUM 6
+
 void init_parameters(struct parameters *parameters, int argc, char *argv[])
 {
-  if (argc < 6)
+  if (argc < MIN_ARGS_NUM)
   {
-    // TODO
+    int all;
+    char outfile[MAX_OUTFILE_LEN];
+
+    printf("Please input parameters."); 
+    printf("\nSegment length: ");
+    scanf("%u", &(parameters->segment_length));
+    printf("Number of iterations: ");
+    scanf("%u", &(parameters->nb_iterations));
+    printf("Foreground color (hex): ");
+    scanf("%x", &(parameters->fg_color));
+    printf("Background color (hex): ");
+    scanf("%x", &(parameters->bg_color));
+    printf("Outfile path: ");
+    scanf("%49s", outfile);
+    printf("All images (0/1): ");
+    scanf("%u", &all);
+    parameters->all_images = (bool) all;
+  
+    parameters->outfile = outfile;
   } else
   {
     parameters->segment_length = atoi(argv[1]);
