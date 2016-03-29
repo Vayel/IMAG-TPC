@@ -4,9 +4,11 @@
  */
 
 #include <stdlib.h>
+#include <math.h>
 #include "koch_fonctions.h"
 #include "create_image.h"
-// TODO
+
+#define PI 3.14159265
 
 /* Initialisation de la liste chainee koch correspondant au triangle
    de Koch initial */
@@ -44,7 +46,39 @@ void init_picture(uint32_t **picture, uint32_t size, uint32_t bg_color)
    generation de la liste chainee koch correspondante */
 void generer_koch(struct list *koch, uint32_t nb_iterations)
 {
-    // TODO
+  if (!nb_iterations) return;
+
+  // Lire l'enonce pour comprendre les noms de variables
+  struct list *a = koch;
+  struct list *e = koch->next;
+  struct list *b, *c, *d;
+
+  for (uint8_t i = 0; i < nb_iterations; i++) {
+      while (e != NULL) {
+          // On cree les points
+          b = malloc(sizeof(struct list));
+          b->x = a->x + (e->x - a->x)/3.0;
+          b->y = a->y + (e->y - a->y)/3.0;
+
+          d = malloc(sizeof(struct list));
+          d->x = a->x + 2 * (e->x - a->x)/3.0;
+          d->y = a->y + 2 * (e->y - a->y)/3.0;
+
+          c = malloc(sizeof(struct list));
+          c->x = (b->x + d->x) * cos(PI/3.0) - (d->y - b->y) * sin(PI/3.0);
+          c->y = (b->y + d->y) * cos(PI/3.0) - (d->x - b->x) * sin(PI/3.0);
+
+          // On insere les points dans la liste
+          a->next = b;
+          b->next = c;
+          c->next = d;
+          d->next = e;
+
+          // On change de segment
+          a = e;
+          e = e->next;
+      }
+  }
 }
 
 /* Rendu image via algorithme bresehem - version generalisee
