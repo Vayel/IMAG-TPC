@@ -12,5 +12,7 @@ int main() {
   generer_koch(koch, 1);
   show_koch_list(koch);
 
+  free_koch(koch);
+
   return EXIT_SUCCESS;
 }

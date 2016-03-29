@@ -91,5 +91,14 @@ void render_image_bresenham(uint32_t *picture, struct list *koch, uint32_t size,
 /* Liberation de la memoire allouee a la liste chainee */
 void free_koch(struct list *koch)
 {
-    // TODO
+  // On ne peut liberer que de la memoire allouee via (m/c/re)alloc
+  koch = koch->next;
+
+  struct list *next;
+
+  do {
+    next = koch->next;
+    free(koch);
+    koch = next;
+  } while (koch != NULL);
 }
