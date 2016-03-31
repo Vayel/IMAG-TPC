@@ -4,6 +4,7 @@
  */
 
 #include <stdlib.h>
+#include <stdio.h> // TODO
 #include <math.h>
 #include "koch_fonctions.h"
 #include "create_image.h"
@@ -39,7 +40,11 @@ void init_koch(struct list **koch, uint32_t size, uint32_t segment_length)
    parametres */
 void init_picture(uint32_t **picture, uint32_t size, uint32_t bg_color)
 {
-    // TODO
+  *picture = calloc(size * size, sizeof(uint32_t));
+
+  for (uint64_t i = 0; i < size * size; i++) {
+    (*picture)[i] = bg_color;
+  }
 }
 
 /* Calcul de la fractale de Koch apres un nombre d'iterations donne ;
@@ -81,11 +86,63 @@ void generer_koch(struct list *koch, uint32_t nb_iterations)
   }
 }
 
+void tracer_ligne(uint32_t *picture, uint32_t size, struct list *pt0, struct list *pt1, uint32_t color)
+{
+  uint32_t x0 = pt0->x; 
+  uint32_t y0 = pt0->y; 
+  uint32_t x1 = pt1->x; 
+  uint32_t y1 = pt1->y; 
+
+  int dx = abs(x1 - x0);
+  int dy = abs(y1 - y0);
+  int sx = -1;
+  int sy = -1;
+
+  if (x0 < x1) sx = 1;
+  if (y0 < y1) sy = 1;
+
+  int err = dx - dy;
+  int e2;
+  
+  // TODO
+  int i = 0;
+
+  while (i < 100) {
+    i++;
+
+    picture[x0 + (size - y0) * size] = color;
+
+    if (x0 == x1 && y0 == y1) break;
+
+    e2 = 2 * err;
+
+    if (e2 > -dy) {
+      err -= dy;
+      x0 += sx;
+    }
+
+    if (e2 < dx) {
+      err += dx;
+      y0 += sy;
+    }
+  }
+}
+
 /* Rendu image via algorithme bresehem - version generalisee
    simplifiee */
 void render_image_bresenham(uint32_t *picture, struct list *koch, uint32_t size, uint32_t fg_color)
 {
-    // TODO
+  struct list *a = koch;
+  struct list *e = koch->next;
+
+  while (e != NULL) {
+    tracer_ligne(picture, size, a, e, fg_color);
+    return; // TODO
+    a = e;
+    e = e->next;
+  }
+  // On ferme le trace
+  tracer_ligne(picture, size, a, koch, fg_color);
 }
 
 /* Liberation de la memoire allouee a la liste chainee */

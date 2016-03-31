@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <math.h>
 
 #define MAX_OUTFILE_LEN 50
 #define MIN_ARGS_NUM 6
@@ -44,7 +45,7 @@ void init_parameters(struct parameters *parameters, int argc, char *argv[])
     parameters->all_images = argc >= 7 && !strcmp(argv[6], "all");
   }
 
-  parameters->image_size = 0; // TODO
+  parameters->image_size = 4.0/3.0 * parameters->segment_length * sqrt(3.0)/2.0;
 }
 
 void show_koch_list(struct list *koch)
