@@ -26,30 +26,26 @@ void create_image_ppm(uint32_t *pic, int32_t size_x, int32_t size_y, char *filen
     FILE *f;
     f = fopen(filename, "w");
 
-    fwrite("P6\n", sizeof(char), 3, f);
+    fprintf(f, "P6\n");
     fprintf(f, "%d", size_x);
-    fwrite(" ", sizeof(char), 1, f);
+    fprintf(f, " ");
     fprintf(f, "%d", size_y);
-    fwrite("\n255\n", sizeof(char), 5, f);
+    fprintf(f, "\n255\n");
 
+    uint64_t area = size_x * size_y;
     uint32_t px;
     uint8_t r, g, b;
 
-    for (uint8_t y = 0; y < size_y; y++)
+    for (uint64_t i = 0; i < area; i++)
     {
-      for (uint8_t x = 0; x < size_x; x++)
-      {
-        px = pic[x + y * size_x];
-        r = get_r(px);
-        g = get_g(px);
-        b = get_b(px);
-        
-        fwrite(&r, sizeof(uint8_t), 1, f);
-        fwrite(&g, sizeof(uint8_t), 1, f);
-        fwrite(&b, sizeof(uint8_t), 1, f);
-        fwrite(" ", sizeof(char), 1, f);
-      }
-      fwrite("\n", sizeof(char), 1, f);
+      px = pic[i];
+      r = get_r(px);
+      g = get_g(px);
+      b = get_b(px);
+      
+      fwrite(&r, sizeof(uint8_t), 1, f);
+      fwrite(&g, sizeof(uint8_t), 1, f);
+      fwrite(&b, sizeof(uint8_t), 1, f);
     }
 
     fclose(f);
