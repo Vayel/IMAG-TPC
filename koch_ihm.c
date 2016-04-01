@@ -29,7 +29,7 @@ void init_parameters(struct parameters *parameters, int argc, char *argv[])
     printf("Background color (hex): ");
     scanf("%x", &(parameters->bg_color));
     printf("Outfile path: ");
-    scanf("%49s", outfile);
+    scanf("%49s", outfile); // 49 = MAX_OUTFILE_LEN - 1
     printf("All images (0/1): ");
     scanf("%u", &all);
     parameters->all_images = (bool) all;
@@ -45,7 +45,7 @@ void init_parameters(struct parameters *parameters, int argc, char *argv[])
     parameters->all_images = argc >= 7 && !strcmp(argv[6], "all");
   }
 
-  parameters->image_size = 4.0/3.0 * parameters->segment_length * sqrt(3.0)/2.0;
+  parameters->image_size = parameters->segment_length;
 }
 
 void show_koch_list(struct list *koch)

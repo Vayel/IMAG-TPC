@@ -4,7 +4,6 @@
  */
 
 #include <stdlib.h>
-#include <stdio.h> // TODO
 #include <math.h>
 #include "koch_fonctions.h"
 #include "create_image.h"
@@ -71,11 +70,12 @@ void create_points(struct list *a, struct list **b, struct list **c, struct list
 void generer_koch(struct list *koch, uint32_t nb_iterations)
 {
   // Lire l'enonce pour comprendre les noms de variables
-  struct list *a = koch;
-  struct list *e = koch->next;
-  struct list *b, *c, *d;
+  struct list *a, *b, *c, *d, *e;
 
   for (uint32_t i = 0; i < nb_iterations; i++) {
+      a = koch;
+      e = koch->next;
+
       while (e != NULL) {
           // On cree les points
           create_points(a, &b, &c, &d, e);
