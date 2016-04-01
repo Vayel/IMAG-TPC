@@ -9,8 +9,6 @@
 #include "koch_fonctions.h"
 #include "create_image.h"
 
-#define PI 3.14159265
-
 /* Initialisation de la liste chainee koch correspondant au triangle
    de Koch initial */
 void init_koch(struct list **koch, uint32_t size, uint32_t segment_length)
@@ -20,6 +18,11 @@ void init_koch(struct list **koch, uint32_t size, uint32_t segment_length)
          /  \
         /    \
         ------ pt3
+
+        y
+        |
+        |____ x
+       0
     */
     struct list *pt3 = malloc(sizeof(struct list));
     pt3->x = segment_length;
@@ -28,7 +31,7 @@ void init_koch(struct list **koch, uint32_t size, uint32_t segment_length)
 
     struct list *pt2 = malloc(sizeof(struct list));
     pt2->x = segment_length/2.0;
-    pt2->y = 0;
+    pt2->y = size;
     pt2->next = pt3;
 
     (*koch)->x = 0;
@@ -47,42 +50,51 @@ void init_picture(uint32_t **picture, uint32_t size, uint32_t bg_color)
   }
 }
 
+void create_points(struct list *a, struct list **b, struct list **c, struct list **d, struct list *e)
+{
+  *b = malloc(sizeof(struct list));
+  (*b)->x = a->x + ((int32_t) (e->x - a->x)/3.0);
+  (*b)->y = a->y + ((int32_t) (e->y - a->y)/3.0);
+
+  *d = malloc(sizeof(struct list));
+  (*d)->x = a->x + 2 * ((int32_t) (e->x - a->x)/3.0);
+  (*d)->y = a->y + 2 * ((int32_t) (e->y - a->y)/3.0);
+
+  *c = malloc(sizeof(struct list));
+  // cos(60°) = 0.5, sin(60°) = sqrt(3)/2
+  (*c)->x = ((int32_t) ((*b)->x + (*d)->x) * 0.5) - ((int32_t) ((*d)->y - (*b)->y) * sqrt(3.0)/2.0);
+  (*c)->y = ((int32_t) ((*b)->y + (*d)->y) * 0.5) + ((int32_t) ((*d)->x - (*b)->x) * sqrt(3.0)/2.0);
+}
+
 /* Calcul de la fractale de Koch apres un nombre d'iterations donne ;
    generation de la liste chainee koch correspondante */
 void generer_koch(struct list *koch, uint32_t nb_iterations)
 {
-  if (!nb_iterations) return;
-
   // Lire l'enonce pour comprendre les noms de variables
   struct list *a = koch;
   struct list *e = koch->next;
   struct list *b, *c, *d;
 
-  for (uint8_t i = 0; i < nb_iterations; i++) {
+  for (uint32_t i = 0; i < nb_iterations; i++) {
       while (e != NULL) {
           // On cree les points
-          b = malloc(sizeof(struct list));
-          b->x = a->x + (e->x - a->x)/3.0;
-          b->y = a->y + (e->y - a->y)/3.0;
-
-          d = malloc(sizeof(struct list));
-          d->x = a->x + 2 * (e->x - a->x)/3.0;
-          d->y = a->y + 2 * (e->y - a->y)/3.0;
-
-          c = malloc(sizeof(struct list));
-          c->x = (b->x + d->x) * cos(PI/3.0) - (d->y - b->y) * sin(PI/3.0);
-          c->y = (b->y + d->y) * cos(PI/3.0) - (d->x - b->x) * sin(PI/3.0);
+          create_points(a, &b, &c, &d, e);
 
           // On insere les points dans la liste
           a->next = b;
           b->next = c;
           c->next = d;
           d->next = e;
-
+          
           // On change de segment
           a = e;
           e = e->next;
       }
+      create_points(a, &b, &c, &d, koch);
+      a->next = b;
+      b->next = c;
+      c->next = d;
+      d->next = NULL;
   }
 }
 
@@ -104,12 +116,7 @@ void tracer_ligne(uint32_t *picture, uint32_t size, struct list *pt0, struct lis
   int err = dx - dy;
   int e2;
   
-  // TODO
-  int i = 0;
-
-  while (i < 100) {
-    i++;
-
+  while (1) {
     picture[x0 + (size - y0) * size] = color;
 
     if (x0 == x1 && y0 == y1) break;
@@ -137,7 +144,7 @@ void render_image_bresenham(uint32_t *picture, struct list *koch, uint32_t size,
 
   while (e != NULL) {
     tracer_ligne(picture, size, a, e, fg_color);
-    return; // TODO
+    
     a = e;
     e = e->next;
   }
