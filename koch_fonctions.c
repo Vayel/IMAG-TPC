@@ -23,18 +23,21 @@ void init_koch(struct list **koch, uint32_t size, uint32_t segment_length)
         |____ x
        0
     */
+    int32_t margin = (size - segment_length)/2.0;
+
     struct list *pt3 = malloc(sizeof(struct list));
-    pt3->x = segment_length;
-    pt3->y = size/3.0;
+    pt3->x = segment_length + margin;
+    pt3->y = size/4.0;
     pt3->next = NULL;
 
     struct list *pt2 = malloc(sizeof(struct list));
-    pt2->x = segment_length/2.0;
+    pt2->x = segment_length/2.0 + margin;
     pt2->y = size;
     pt2->next = pt3;
 
-    (*koch)->x = 0;
-    (*koch)->y = size/3.0;
+    *koch = malloc(sizeof(struct list));
+    (*koch)->x = margin;
+    (*koch)->y = size/4.0;
     (*koch)->next = pt2;
 }
 
@@ -155,9 +158,6 @@ void render_image_bresenham(uint32_t *picture, struct list *koch, uint32_t size,
 /* Liberation de la memoire allouee a la liste chainee */
 void free_koch(struct list *koch)
 {
-  // On ne peut liberer que de la memoire allouee via (m/c/re)alloc
-  koch = koch->next;
-
   struct list *next;
 
   do {

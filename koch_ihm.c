@@ -45,7 +45,7 @@ void init_parameters(struct parameters *parameters, int argc, char *argv[])
     parameters->all_images = argc >= 7 && !strcmp(argv[6], "all");
   }
 
-  parameters->image_size = parameters->segment_length;
+  parameters->image_size = 4.0/3.0 * sqrt(3)/2.0 * parameters->segment_length;
 }
 
 void show_koch_list(struct list *koch)
