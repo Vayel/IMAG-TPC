@@ -6,6 +6,10 @@
 #include "create_image.h"
 #include <stdio.h>
 
+/* Un pixel est un uint32_t, code de la maniere suivante (le premier octet n'a pas d'importance) :
+ * xxxxxxxxRRRRRRRRVVVVVVVVBBBBBBBB
+ */
+
 // Retourne la composante rouge d'un pixel
 uint8_t get_r(uint32_t px)
 {
