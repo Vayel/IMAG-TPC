@@ -27,7 +27,7 @@ int main(int argc, char **argv)
     } else {
       // Iteration 0
       char fname[strlen(params.outfile)];
-      sprintf(fname, "%d_", 0);
+      sprintf(fname, "0%d_", 0);
       strcat(fname, params.outfile);
 
       init_picture(&picture, params.image_size, params.bg_color);
@@ -37,7 +37,8 @@ int main(int argc, char **argv)
       for (uint32_t i = 0; i < params.nb_iterations; i++) {
         // Iteration i+1
         char fname[strlen(params.outfile)];
-        sprintf(fname, "%d_", (int) i+1);
+        if (i+1 < 10) sprintf(fname, "0%d_", (int) i+1);
+        else sprintf(fname, "%d_", (int) i+1);
         strcat(fname, params.outfile);
 
         init_picture(&picture, params.image_size, params.bg_color);
